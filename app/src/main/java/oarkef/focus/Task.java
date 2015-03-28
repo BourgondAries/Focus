@@ -19,13 +19,13 @@ public class Task
 
     public void loadEarliestEvent(Context context)
     {
-        String deadline =  io.loadDeadlineFromFile(context);
-        Timestamp ts = Timestamp.valueOf(deadline);
-        finish_time.setTimeInMillis(ts.getTime());
+        String task =  io.loadNextDeadlineFromFile(context);
+        int index = task.indexOf(io.getSplitChar());
+        String time_part = task.substring(0, index);
+        finish_time.setTimeInMillis(Timestamp.valueOf(time_part).getTime());
 
-        description = "Do this task pls";
+        description = task.substring(index + 2);
     }
-
 
     public String getDescription()
     {

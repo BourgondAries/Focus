@@ -17,8 +17,10 @@ import java.sql.Timestamp;
 public class IO
 {
 
-    private final String filename = "gerpherp.txt";
-    private String tempfile = "temp.txt";
+    private String filename_0 = "file1";
+    private String filename_1 = "file2";
+    private String  current_file = filename_0;
+    private String other_file = filename_1;
     private final char split_char = ';' ;
     private final int READ_BLOCK_SIZE = 100;
 
@@ -27,7 +29,7 @@ public class IO
         try
         {
             //deleteFile(filename);
-            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            FileOutputStream fos = context.openFileOutput(current_file, Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
             osw.write(deadline);
             osw.flush();
@@ -37,78 +39,81 @@ public class IO
         }
     }
 
-    public String loadDeadlineFromFile(Context context)
+    public String loadNextDeadlineFromFile(Context context)
     {
-
-        String string = "";
+        String task = "";
+        int index;
+        Timestamp curr_ts = new Timestamp(System.currentTimeMillis());
+        Timestamp read_ts = null;
+        Timestamp closest = Timestamp.valueOf("2099-01-01 00:00:00");
+        String time_part;
 
         try
         {
-            FileInputStream fis = context.openFileInput(filename);
+            FileInputStream fis = context.openFileInput(current_file);
             InputStreamReader isr = new InputStreamReader(fis);
-            char[] inputBuffer = new char[READ_BLOCK_SIZE];
-            int charRead;
+            BufferedReader br = new BufferedReader(isr);
+            String oneLine;
 
-            while ((charRead = isr.read(inputBuffer,0,1)) > 0 )
-            {
-                //Log.d(PROJECT_TAG, String.valueOf(charRead));
-                String readString = String.copyValueOf(inputBuffer, 0, charRead);
-                string += readString;
-                inputBuffer = new char[READ_BLOCK_SIZE];
+            while ((oneLine = br.readLine()) != null ) {
+
+                index = oneLine.indexOf(split_char);
+                time_part = oneLine.substring(0, index);
+                read_ts = Timestamp.valueOf(time_part);
+
+
+                if (read_ts.before(curr_ts)) {
+                    closest = read_ts;
+                    task = oneLine;
+
+                }
             }
-
+            br.close();
             isr.close();
-            //Log.d(PROJECT_TAG, string);
-
+            fis.close();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-        return string;
+        return task;
     }
+
     public void deleteOldEntries(Context context)
     {
-        Log.v("TAG", "Test");
         Timestamp curr_ts = new Timestamp(System.currentTimeMillis());
         Timestamp read_ts;
         int index;
         String time_part;
 
         try {
-            FileInputStream fis = context.openFileInput(filename);
+            FileInputStream fis = context.openFileInput(current_file);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
 
-            FileOutputStream fos = context.openFileOutput(tempfile, Context.MODE_PRIVATE);
+            FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
 
             String oneLine;
 
             while ((oneLine = br.readLine()) != null ) {
-                Log.d("TAG", oneLine);
                 index = oneLine.indexOf(split_char);
-                time_part = oneLine.substring(0, index + 1);
+                time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
                 if (read_ts.after(curr_ts)) {
-                    osw.write(oneLine);
+                    osw.write(oneLine + "\n");
                 }
             }
-            osw.write("Last line");
             osw.flush();
             osw.close();
-            //fos.close();
+            fos.close();
 
             br.close();
-            // isr.close();
-            //fis.close();
-            //fis.close();
+            isr.close();
+            fis.close();
+            fis.close();
 
-            // Need to make filename = tempfile:
-            //File old_file = context.getFileStreamPath(filename);
-            //File new_file = context.getFileStreamPath(tempfile);
-            //old_file.renameTo(new_file);
-
+            changeCurrentFile();
 
         }
         catch (IOException e) {
@@ -117,6 +122,21 @@ public class IO
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void changeCurrentFile() {
+
+        if (current_file == filename_0) {
+            current_file = filename_1;
+            other_file = filename_0;
+        }
+        else {
+            current_file = filename_0;
+            other_file = filename_1;
+        }
+    }
+
+    public char getSplitChar(){
+        return split_char;
     }
 
 }
