@@ -5,6 +5,7 @@ import oarkef.focus.util.SystemUiHider;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -188,12 +189,18 @@ public class FullscreenActivity extends Activity {
 
             public void onTick(long millis_until_finished)
             {
-                full_screen.setText(task.description + "Seconds remaining: " + millis_until_finished / 1000);
+                long secs = millis_until_finished / 1000;
+                long seconds = secs % 60;
+                long mins = secs / 60;
+                long minutes = mins % 60;
+                long hours = mins / 60;
+                full_screen.setText(task.description + "\n" + hours + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
             }
 
             public void onFinish()
             {
-                full_screen.setText(task.description + "Overdue");
+                full_screen.setText(task.description + "\nOverdue");
+                full_screen.setTextColor(Color.RED);
             }
         }.start();
     }
