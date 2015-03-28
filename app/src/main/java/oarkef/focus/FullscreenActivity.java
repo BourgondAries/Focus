@@ -176,7 +176,22 @@ public class FullscreenActivity extends Activity {
     public void deleteEvent(View view)
     {
         TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
-        full_screen.setText("Herp");
+        if (countdown != null)
+            countdown.cancel();
+        countdown = new CountDownTimer(java.util.Calendar.getInstance().getTimeInMillis() + 90000 - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
+        {
+            private TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
+
+            public void onTick(long millis_until_finished)
+            {
+                full_screen.setText(task.description + "Seconds remaining: " + millis_until_finished / 1000);
+            }
+
+            public void onFinish()
+            {
+                full_screen.setText(task.description + "Overdue");
+            }
+        }.start();
     }
 
     @Override
@@ -195,12 +210,12 @@ public class FullscreenActivity extends Activity {
 
                 public void onTick(long millis_until_finished)
                 {
-                    full_screen.setText("Seconds remaining: " + millis_until_finished / 1000);
+                    full_screen.setText(task.description + "Seconds remaining: " + millis_until_finished / 1000);
                 }
 
                 public void onFinish()
                 {
-                    full_screen.setText("Innlevering is kill");
+                    full_screen.setText(task.description + "Overdue");
                 }
             }.start();
         }
