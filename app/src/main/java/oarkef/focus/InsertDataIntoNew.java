@@ -7,20 +7,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import java.util.Calendar;
 
 
 public class InsertDataIntoNew extends ActionBarActivity {
 
-    java.util.Calendar calendar;
-    String time;
+    java.util.Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_data_into_new);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,7 +51,7 @@ public class InsertDataIntoNew extends ActionBarActivity {
 
     public void pickDate(View view)
     {
-        Intent intent = new Intent(this, PickADateActivity.class);
+        Intent intent = new Intent(this, DatePickingActivity.class);
         startActivityForResult(intent, Request.DATE.ordinal());
     }
 
@@ -65,7 +64,6 @@ public class InsertDataIntoNew extends ActionBarActivity {
     public void save(View view)
     {
         Intent out = new Intent();
-        out.putExtra("Time", time);
         out.putExtra("Date", calendar);
         out.putExtra("Description", ((EditText) findViewById(R.id.editText)).getText().toString());
         setResult(RESULT_OK, out);
@@ -84,9 +82,13 @@ public class InsertDataIntoNew extends ActionBarActivity {
         if (result_code == RESULT_CANCELED)
             return;
         if (request_code == Request.DATE.ordinal()) {
-            calendar = (java.util.Calendar) data.getSerializableExtra("Date");
+            Calendar other_calendar = (java.util.Calendar) data.getSerializableExtra("Date");
+            calendar.set(other_calendar.get(Calendar.YEAR), other_calendar.get(Calendar.MONTH), other_calendar.get(Calendar.DAY_OF_MONTH));
         } else if (request_code == Request.TIME.ordinal()) {
-            time = (String) data.getStringExtra("Time");
+            int hour = Integer.valueOf(data.getStringExtra("Hour"));
+            int minute = Integer.valueOf(data.getStringExtra("Minute"));
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
         }
     }
 }

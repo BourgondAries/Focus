@@ -17,6 +17,8 @@ public class TimePickingActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_picking);
+        TimePicker time_picker = (TimePicker) findViewById(R.id.timePicker);
+        time_picker.setIs24HourView(true);
     }
 
 
@@ -46,7 +48,8 @@ public class TimePickingActivity extends ActionBarActivity {
     {
         TimePicker time_picker = (TimePicker) findViewById(R.id.timePicker);
         Intent out = new Intent();
-        out.putExtra("Time", "" + time_picker.getCurrentHour() + ":" + time_picker.getCurrentMinute());
+        out.putExtra("Hour", "" + time_picker.getCurrentHour());
+        out.putExtra("Minute", "" + time_picker.getCurrentMinute());
         setResult(RESULT_OK, out);
         finish();
     }

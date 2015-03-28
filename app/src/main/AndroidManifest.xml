@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PickADateActivity"
+            android:name=".DatePickingActivity"
             android:label="@string/title_activity_input"
             android:parentActivityName=".FullscreenActivity" >
             <meta-data

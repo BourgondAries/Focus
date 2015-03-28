@@ -11,12 +11,12 @@ import android.widget.DatePicker;
 import java.util.Calendar;
 
 
-public class PickADateActivity extends ActionBarActivity {
+public class DatePickingActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pick_a_date);
+        setContentView(R.layout.activity_date_picking);
     }
 
     @Override

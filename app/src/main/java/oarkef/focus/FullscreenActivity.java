@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -180,7 +182,7 @@ public class FullscreenActivity extends Activity {
     {
         if (countdown != null)
             countdown.cancel();
-        countdown = new CountDownTimer(java.util.Calendar.getInstance().getTimeInMillis() + 90000 - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
+        countdown = new CountDownTimer(task.finish_time.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
         {
             private TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
 
@@ -203,18 +205,20 @@ public class FullscreenActivity extends Activity {
             return;
 
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
-        String time = data.getStringExtra("Time");
         String description = data.getStringExtra("Description");
-        ((TextView) findViewById(R.id.fullscreen_content)).setText(time + "\n" + description);
-        /*
-        if (true /*the event is closer than the current, store the current and load this event instead*/ /*)
+        ((TextView) findViewById(R.id.fullscreen_content)).setText(calendar.getTimeInMillis() + "\n" + description);
+
+        System.out.println(calendar);
+        System.out.println(Calendar.getInstance());
+        if (true /*the event is closer than the current, store the current and load this event instead*/ )
         {
+            task.finish_time = calendar;
+            task.description = description;
             restartCounter();
         }
-        else /*Store the event in the database(just a simple file)*//*
+        else /*Store the event in the database(just a simple file)*/
         {
 
         }
-        */
     }
 }
