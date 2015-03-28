@@ -226,8 +226,6 @@ public class FullscreenActivity extends Activity {
         String description = data.getStringExtra("Description");
         ((TextView) findViewById(R.id.fullscreen_content)).setText(calendar.getTimeInMillis() + "\n" + description);
 
-        System.out.println(calendar);
-        System.out.println(Calendar.getInstance());
         if (true /*the event is closer than the current, store the current and load this event instead*/ )
         {
             task.finish_time = calendar;
