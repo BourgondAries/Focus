@@ -71,6 +71,7 @@ public class InsertDataIntoNew extends ActionBarActivity {
 
     public void cancel(View view)
     {
+        setResult(RESULT_CANCELED, null);
         finish();
     }
 

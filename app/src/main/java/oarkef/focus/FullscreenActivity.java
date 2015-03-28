@@ -200,6 +200,8 @@ public class FullscreenActivity extends Activity {
     @Override
     protected void onActivityResult(int request_code, int result_code, Intent data)
     {
+        if (result_code == RESULT_CANCELED)
+            return;
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
         String time = data.getStringExtra("Time");
         String description = data.getStringExtra("Description");
