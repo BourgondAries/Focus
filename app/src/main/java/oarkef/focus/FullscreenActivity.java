@@ -194,7 +194,8 @@ public class FullscreenActivity extends Activity {
                 long mins = secs / 60;
                 long minutes = mins % 60;
                 long hours = mins / 60;
-                full_screen.setText(task.description + "\n" + hours + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+                full_screen.setText(task.description + "\n" + hours + ":" + String.format("%02d:%02d", minutes, seconds));
+                full_screen.setTextColor(Color.parseColor("#33b5e5"));
             }
 
             public void onFinish()
