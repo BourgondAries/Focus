@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 public class FullscreenActivity extends Activity {
 
     Task task = new Task();
+    CountDownTimer countdown;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -117,6 +119,7 @@ public class FullscreenActivity extends Activity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.new_button).setOnTouchListener(mDelayHideTouchListener);
+
     }
 
     @Override
@@ -181,6 +184,24 @@ public class FullscreenActivity extends Activity {
     {
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
         TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
-        full_screen.setText("" + (java.util.Calendar.getInstance().getTimeInMillis() - calendar.getTimeInMillis()));
+
+        if (true /*the event is closer than the current, store the current and load this event instead*/)
+        {
+            // Create a timer:
+            countdown = new CountDownTimer(calendar.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
+            {
+                private TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
+
+                public void onTick(long millis_until_finished)
+                {
+                    full_screen.setText("Seconds remaining: " + millis_until_finished / 1000);
+                }
+
+                public void onFinish()
+                {
+                    full_screen.setText("Innlevering is kill");
+                }
+            }.start();
+        }
     }
 }
