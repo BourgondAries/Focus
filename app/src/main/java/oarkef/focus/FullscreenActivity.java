@@ -183,7 +183,6 @@ public class FullscreenActivity extends Activity {
     protected void onActivityResult(int request_code, int result_code, Intent data)
     {
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
-        TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
 
         if (true /*the event is closer than the current, store the current and load this event instead*/)
         {
@@ -204,6 +203,10 @@ public class FullscreenActivity extends Activity {
                     full_screen.setText("Innlevering is kill");
                 }
             }.start();
+        }
+        else /*Store the event in the database(just a simple file)*/
+        {
+
         }
     }
 }
