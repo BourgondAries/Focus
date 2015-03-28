@@ -19,6 +19,12 @@ public class InsertDataIntoNew extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_data_into_new);
+
+        Intent intent = new Intent(this, TimePickingActivity.class);
+        startActivityForResult(intent, Request.TIME.ordinal());
+
+        intent = new Intent(this, DatePickingActivity.class);
+        startActivityForResult(intent, Request.DATE.ordinal());
     }
 
     @Override
