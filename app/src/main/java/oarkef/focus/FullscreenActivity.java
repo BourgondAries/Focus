@@ -4,6 +4,7 @@ import oarkef.focus.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -165,6 +166,8 @@ public class FullscreenActivity extends Activity {
     {
         TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
         full_screen.setText("Derp");
+        Intent intent = new Intent(this, InputActivity.class);
+        startActivity(intent);
     }
 
     public void deleteEvent(View view)

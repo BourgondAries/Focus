@@ -3,4 +3,8 @@
     <string name="finished_button">Finished</string>
     <string name="new_event_button">New Event</string>
     <string name="focus_title">FOCUS</string>
+    <string name="title_activity_input">InputActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 </resources>

@@ -18,6 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".InputActivity"
+            android:label="@string/title_activity_input"
+            android:parentActivityName=".FullscreenActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="oarkef.focus.FullscreenActivity" />
+        </activity>
     </application>
 
 </manifest>
