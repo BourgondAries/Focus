@@ -1,9 +1,14 @@
 package oarkef.focus;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
+
+import java.util.Calendar;
 
 
 public class InputActivity extends ActionBarActivity {
@@ -37,5 +42,21 @@ public class InputActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void returnResult(View view)
+    {
+        DatePicker date_picker = (DatePicker) findViewById(R.id.datePicker);
+        int day = date_picker.getDayOfMonth();
+        int month = date_picker.getMonth();
+        int year = date_picker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+
+        Intent out = new Intent();
+        out.putExtra("Date", calendar);
+        setResult(RESULT_OK, out);
+        finish();
     }
 }

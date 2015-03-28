@@ -6,5 +6,5 @@ package oarkef.focus;
 public class Task
 {
     public String description;
-    public java.sql.Timestamp finish_time;
+    public java.util.Calendar finish_time;
 }

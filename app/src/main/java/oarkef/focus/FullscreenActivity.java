@@ -167,12 +167,20 @@ public class FullscreenActivity extends Activity {
         TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
         full_screen.setText("Derp");
         Intent intent = new Intent(this, InputActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
     public void deleteEvent(View view)
     {
         TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
         full_screen.setText("Herp");
+    }
+
+    @Override
+    protected void onActivityResult(int request_code, int result_code, Intent data)
+    {
+        java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
+        TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
+        full_screen.setText("" + (java.util.Calendar.getInstance().getTimeInMillis() - calendar.getTimeInMillis()));
     }
 }
