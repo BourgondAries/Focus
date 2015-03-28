@@ -6,11 +6,10 @@
     tools:context="oarkef.focus.InputActivity"
     android:weightSum="1" >
 
-
     <DatePicker
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.3"
+        android:layout_weight="0.7"
         android:id="@+id/datePicker"
         android:gravity="center" />
 
@@ -20,6 +19,7 @@
         android:text="Ok"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"
-        android:onClick="returnResult" />
+        android:onClick="returnResult"
+        android:layout_weight="0.3" />
 
 </LinearLayout>
