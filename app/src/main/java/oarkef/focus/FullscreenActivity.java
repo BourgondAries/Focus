@@ -169,12 +169,15 @@ public class FullscreenActivity extends Activity {
     {
         TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
         full_screen.setText("Derp");
-        Intent intent = new Intent(this, InputActivity.class);
+        Intent intent = new Intent(this, InsertDataIntoNew.class);
         startActivityForResult(intent, 0);
     }
 
     public void deleteEvent(View view)
     {
+        Intent intent = new Intent(this, TimePickingActivity.class);
+        startActivityForResult(intent, 0);
+
         TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
         if (countdown != null)
             countdown.cancel();
@@ -198,8 +201,11 @@ public class FullscreenActivity extends Activity {
     protected void onActivityResult(int request_code, int result_code, Intent data)
     {
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
-
-        if (true /*the event is closer than the current, store the current and load this event instead*/)
+        String time = data.getStringExtra("Time");
+        String description = data.getStringExtra("Description");
+        ((TextView) findViewById(R.id.fullscreen_content)).setText(time + "\n" + description);
+        /*
+        if (true /*the event is closer than the current, store the current and load this event instead*/ /*)
         {
             if (countdown != null)
                 countdown.cancel();
@@ -219,9 +225,10 @@ public class FullscreenActivity extends Activity {
                 }
             }.start();
         }
-        else /*Store the event in the database(just a simple file)*/
+        else /*Store the event in the database(just a simple file)*//*
         {
 
         }
+        */
     }
 }

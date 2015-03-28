@@ -5,29 +5,27 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import java.util.Calendar;
 
 
-public class InputActivity extends ActionBarActivity {
+public class TimePickingActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input);
+        setContentView(R.layout.activity_time_picking);
     }
 
 
-    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_input, menu);
+        getMenuInflater().inflate(R.menu.menu_time_picking, menu);
         return true;
     }
-    */
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -44,18 +42,11 @@ public class InputActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void returnResult(View view)
+    public void returnResult(android.view.View view)
     {
-        DatePicker date_picker = (DatePicker) findViewById(R.id.datePicker);
-        int day = date_picker.getDayOfMonth();
-        int month = date_picker.getMonth();
-        int year = date_picker.getYear();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-
+        TimePicker time_picker = (TimePicker) findViewById(R.id.timePicker);
         Intent out = new Intent();
-        out.putExtra("Date", calendar);
+        out.putExtra("Time", "" + time_picker.getCurrentHour() + ":" + time_picker.getCurrentMinute());
         setResult(RESULT_OK, out);
         finish();
     }

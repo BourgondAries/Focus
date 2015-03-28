@@ -19,12 +19,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".InputActivity"
+            android:name=".PickADateActivity"
             android:label="@string/title_activity_input"
             android:parentActivityName=".FullscreenActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="oarkef.focus.FullscreenActivity" />
+        </activity>
+        <activity
+            android:name=".TimePickingActivity"
+            android:label="@string/title_activity_time_picking"
+            android:parentActivityName=".FullscreenActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="oarkef.focus.FullscreenActivity" />
+        </activity>
+        <activity
+            android:name=".InsertDataIntoNew"
+            android:label="@string/title_activity_insert_data_into_new" >
         </activity>
     </application>
 

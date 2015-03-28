@@ -7,4 +7,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_time_picking">TimePickingActivity</string>
+    <string name="title_activity_insert_data_into_new">InsertDataIntoNew</string>
 </resources>
