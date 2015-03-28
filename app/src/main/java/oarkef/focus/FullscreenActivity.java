@@ -194,14 +194,12 @@ public class FullscreenActivity extends Activity {
                 long mins = secs / 60;
                 long minutes = mins % 60;
                 long hours = mins / 60;
-                full_screen.setText(task.description + "\n" + hours + ":" + String.format("%02d:%02d", minutes, seconds));
-                full_screen.setTextColor(Color.parseColor("#33b5e5"));
+                full_screen.setText(task.description + "\n\n" + hours + ":" + String.format("%02d:%02d\nRemaining", minutes, seconds));
             }
 
             public void onFinish()
             {
-                full_screen.setText(task.description + "\nOverdue");
-                full_screen.setTextColor(Color.RED);
+                full_screen.setText(task.description + "\n\nOverdue");
             }
         }.start();
     }
