@@ -14,7 +14,7 @@ public class InsertDataIntoNew extends ActionBarActivity {
 
     java.util.Calendar calendar;
     String time;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

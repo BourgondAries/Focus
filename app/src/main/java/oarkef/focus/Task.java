@@ -17,7 +17,7 @@ public class Task
 
     IO io = new IO();
 
-    public void LoadEarliestEvent(Context context)
+    public void loadEarliestEvent(Context context)
     {
         String deadline =  io.loadDeadlineFromFile(context);
         Timestamp ts = Timestamp.valueOf(deadline);
