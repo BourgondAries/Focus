@@ -20,10 +20,7 @@ public class InsertDataIntoNew extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_data_into_new);
 
-        Intent intent = new Intent(this, TimePickingActivity.class);
-        startActivityForResult(intent, Request.TIME.ordinal());
-
-        intent = new Intent(this, DatePickingActivity.class);
+        Intent intent = new Intent(this, DatePickingActivity.class);
         startActivityForResult(intent, Request.DATE.ordinal());
     }
 
@@ -85,11 +82,17 @@ public class InsertDataIntoNew extends ActionBarActivity {
     @Override
     protected void onActivityResult(int request_code, int result_code, Intent data)
     {
-        if (result_code == RESULT_CANCELED)
-            return;
-        if (request_code == Request.DATE.ordinal()) {
+        System.out.println("result code:" + result_code);
+        if (result_code == RESULT_CANCELED) {
+            // We better just return right here,..
+            setResult(RESULT_CANCELED, null);
+            finish();
+        } else if (request_code == Request.DATE.ordinal()) {
             Calendar other_calendar = (java.util.Calendar) data.getSerializableExtra("Date");
             calendar.set(other_calendar.get(Calendar.YEAR), other_calendar.get(Calendar.MONTH), other_calendar.get(Calendar.DAY_OF_MONTH));
+
+            Intent intent = new Intent(this, TimePickingActivity.class);
+            startActivityForResult(intent, Request.TIME.ordinal());
         } else if (request_code == Request.TIME.ordinal()) {
             int hour = Integer.valueOf(data.getStringExtra("Hour"));
             int minute = Integer.valueOf(data.getStringExtra("Minute"));

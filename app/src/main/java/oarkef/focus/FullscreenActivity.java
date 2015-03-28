@@ -199,7 +199,19 @@ public class FullscreenActivity extends Activity {
 
             public void onFinish()
             {
-                full_screen.setText(task.description + "\n\nOverdue");
+                full_screen.setText(
+                    task.description
+                    + "\n\n"
+                    + task.finish_time.get(Calendar.YEAR)
+                    + "/" + task.finish_time.get(Calendar.MONTH)
+                    + "/" + task.finish_time.get(Calendar.DAY_OF_MONTH)
+                    + String.format(
+                        "\n%02d:%02d:%02d\nOverdue",
+                        task.finish_time.get(Calendar.HOUR_OF_DAY),
+                        task.finish_time.get(Calendar.MINUTE),
+                        task.finish_time.get(Calendar.SECOND)
+                    )
+                );
             }
         }.start();
     }

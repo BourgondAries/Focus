@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -44,7 +45,7 @@ public class TimePickingActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void returnResult(android.view.View view)
+    public void returnResult(View view)
     {
         TimePicker time_picker = (TimePicker) findViewById(R.id.timePicker);
         Intent out = new Intent();
