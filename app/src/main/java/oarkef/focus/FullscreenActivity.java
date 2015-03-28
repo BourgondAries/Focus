@@ -187,6 +187,8 @@ public class FullscreenActivity extends Activity {
 
         if (true /*the event is closer than the current, store the current and load this event instead*/)
         {
+            if (countdown != null)
+                countdown.cancel();
             // Create a timer:
             countdown = new CountDownTimer(calendar.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
             {
