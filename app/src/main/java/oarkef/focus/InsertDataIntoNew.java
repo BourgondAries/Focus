@@ -82,7 +82,6 @@ public class InsertDataIntoNew extends ActionBarActivity {
     @Override
     protected void onActivityResult(int request_code, int result_code, Intent data)
     {
-        System.out.println("result code:" + result_code);
         if (result_code == RESULT_CANCELED) {
             // We better just return right here,..
             setResult(RESULT_CANCELED, null);
