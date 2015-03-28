@@ -17,14 +17,23 @@ public class Task
 
     IO io = new IO();
 
-    public void loadEarliestEvent(Context context)
+    public boolean loadEarliestEvent(Context context)
     {
         String task =  io.loadNextDeadlineFromFile(context);
-        int index = task.indexOf(io.getSplitChar());
-        String time_part = task.substring(0, index);
-        finish_time.setTimeInMillis(Timestamp.valueOf(time_part).getTime());
 
-        description = task.substring(index + 2);
+        if (task.equalsIgnoreCase("")) {
+            return false;
+        } else {
+            int index = task.indexOf(io.getSplitChar());
+
+            String time_part = task.substring(0, index);
+            finish_time.setTimeInMillis(Timestamp.valueOf(time_part).getTime());
+
+            description = task.substring(index + 2);
+
+            return true;
+        }
+
     }
 
     public String getDescription()
