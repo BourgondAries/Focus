@@ -167,18 +167,17 @@ public class FullscreenActivity extends Activity {
 
     public void newEvent(View view)
     {
-        TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
-        full_screen.setText("Derp");
         Intent intent = new Intent(this, InsertDataIntoNew.class);
         startActivityForResult(intent, 0);
     }
 
     public void deleteEvent(View view)
     {
-        Intent intent = new Intent(this, TimePickingActivity.class);
-        startActivityForResult(intent, 0);
+        restartCounter();
+    }
 
-        TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
+    private void restartCounter()
+    {
         if (countdown != null)
             countdown.cancel();
         countdown = new CountDownTimer(java.util.Calendar.getInstance().getTimeInMillis() + 90000 - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
@@ -202,6 +201,7 @@ public class FullscreenActivity extends Activity {
     {
         if (result_code == RESULT_CANCELED)
             return;
+
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
         String time = data.getStringExtra("Time");
         String description = data.getStringExtra("Description");
@@ -209,23 +209,7 @@ public class FullscreenActivity extends Activity {
         /*
         if (true /*the event is closer than the current, store the current and load this event instead*/ /*)
         {
-            if (countdown != null)
-                countdown.cancel();
-            // Create a timer:
-            countdown = new CountDownTimer(calendar.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
-            {
-                private TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
-
-                public void onTick(long millis_until_finished)
-                {
-                    full_screen.setText(task.description + "Seconds remaining: " + millis_until_finished / 1000);
-                }
-
-                public void onFinish()
-                {
-                    full_screen.setText(task.description + "Overdue");
-                }
-            }.start();
+            restartCounter();
         }
         else /*Store the event in the database(just a simple file)*//*
         {

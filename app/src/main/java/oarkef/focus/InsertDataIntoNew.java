@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 public class InsertDataIntoNew extends ActionBarActivity {
 
+    java.util.Calendar calendar;
+    String time;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +78,11 @@ public class InsertDataIntoNew extends ActionBarActivity {
         finish();
     }
 
-
-    java.util.Calendar calendar;
-    String time;
     @Override
     protected void onActivityResult(int request_code, int result_code, Intent data)
     {
+        if (result_code == RESULT_CANCELED)
+            return;
         if (request_code == Request.DATE.ordinal()) {
             calendar = (java.util.Calendar) data.getSerializableExtra("Date");
         } else if (request_code == Request.TIME.ordinal()) {
