@@ -1,5 +1,6 @@
 package oarkef.focus;
 
+import oarkef.focus.util.IO;
 import oarkef.focus.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -27,6 +28,7 @@ public class FullscreenActivity extends Activity {
     private Task task = new Task();
     private CountDownTimer countdown;
     private TextView full_screen;
+    private IO task_storage = new IO();
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -178,6 +180,8 @@ public class FullscreenActivity extends Activity {
 
     public void deleteEvent(View view)
     {
+        task_storage.deleteOldEntries(getApplicationContext());
+        task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext()));
         restartCounter();
     }
 
@@ -206,10 +210,10 @@ public class FullscreenActivity extends Activity {
                     + "/" + task.finish_time.get(Calendar.MONTH)
                     + "/" + task.finish_time.get(Calendar.DAY_OF_MONTH)
                     + String.format(
-                        "\n%02d:%02d:%02d\nOverdue",
-                        task.finish_time.get(Calendar.HOUR_OF_DAY),
-                        task.finish_time.get(Calendar.MINUTE),
-                        task.finish_time.get(Calendar.SECOND)
+                            "\n%02d:%02d:%02d\nOverdue",
+                            task.finish_time.get(Calendar.HOUR_OF_DAY),
+                            task.finish_time.get(Calendar.MINUTE),
+                            task.finish_time.get(Calendar.SECOND)
                     )
                 );
             }
@@ -226,15 +230,20 @@ public class FullscreenActivity extends Activity {
         String description = data.getStringExtra("Description");
         full_screen.setText(calendar.getTimeInMillis() + "\n" + description);
 
-        if (true /*the event is closer than the current, store the current and load this event instead*/ )
+        if (task.finish_time == null || calendar.before(task.finish_time) /*the event is closer than the current, store the current and load this event instead*/ )
         {
+            if (task.finish_time != null)
+                task_storage.saveTask(getApplicationContext(), task.toString());
             task.finish_time = calendar;
             task.description = description;
             restartCounter();
         }
         else /*Store the event in the database(just a simple file)*/
         {
-
+            Task temp_task = new Task();
+            temp_task.finish_time = calendar;
+            temp_task.description = description;
+            task_storage.saveTask(getApplicationContext(), temp_task.toString());
         }
     }
 }
