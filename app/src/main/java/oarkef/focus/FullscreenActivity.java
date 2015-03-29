@@ -194,8 +194,7 @@ public class FullscreenActivity extends Activity {
         startActivityForResult(intent, 0);
     }
 
-    public void deleteEvent(View view)
-    {
+    public void deleteEvent(View view) {
         try {
             task_storage.deleteSpecificEntry(getApplicationContext(), task.toString());
             if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == false) {
@@ -216,8 +215,7 @@ public class FullscreenActivity extends Activity {
             countdown.cancel();
     }
 
-    private void restartCounter()
-    {
+    private void restartCounter() {
         if (countdown != null)
             countdown.cancel();
         countdown = new CountDownTimer(task.finish_time.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000) {
@@ -254,7 +252,7 @@ public class FullscreenActivity extends Activity {
             return;
 
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
-        String description = data.getStringExtra("Description").replace("\n", " ");
+        String description = data.getStringExtra("Description").replace("\n", " ").replace(";", ":");
 
         if (task.finish_time == null || calendar.before(task.finish_time) /*the event is closer than the current, store the current and load this event instead*/ ) {
             if (task.finish_time != null) {

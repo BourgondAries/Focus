@@ -47,8 +47,7 @@ public class TimePickingActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void returnResult(View view)
-    {
+    public void returnResult(View view) {
         Intent out = new Intent();
         out.putExtra("Hour", "" + time_picker.getCurrentHour());
         out.putExtra("Minute", "" + time_picker.getCurrentMinute());

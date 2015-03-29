@@ -14,8 +14,7 @@ import java.sql.Timestamp;
 /**
  * Created by OleAndreas on 28.03.2015.
  */
-public class IO
-{
+public class IO {
 
     private static String main = "file1";
     private static String temp = "file2";

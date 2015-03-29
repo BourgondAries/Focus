@@ -46,26 +46,22 @@ public class InsertDataIntoNew extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private static enum Request
-    {
+    private static enum Request {
         DATE,
         TIME
     }
 
-    public void pickDate(View view)
-    {
+    public void pickDate(View view) {
         Intent intent = new Intent(this, DatePickingActivity.class);
         startActivityForResult(intent, Request.DATE.ordinal());
     }
 
-    public void pickTime(View view)
-    {
+    public void pickTime(View view) {
         Intent intent = new Intent(this, TimePickingActivity.class);
         startActivityForResult(intent, Request.TIME.ordinal());
     }
 
-    public void save(View view)
-    {
+    public void save(View view) {
         Intent out = new Intent();
         out.putExtra("Date", calendar);
         out.putExtra("Description", ((EditText) findViewById(R.id.editText)).getText().toString());
@@ -73,15 +69,13 @@ public class InsertDataIntoNew extends ActionBarActivity {
         finish();
     }
 
-    public void cancel(View view)
-    {
+    public void cancel(View view) {
         setResult(RESULT_CANCELED, null);
         finish();
     }
 
     @Override
-    protected void onActivityResult(int request_code, int result_code, Intent data)
-    {
+    protected void onActivityResult(int request_code, int result_code, Intent data) {
         if (result_code == RESULT_CANCELED) {
             // We better just return right here,..
             setResult(RESULT_CANCELED, null);

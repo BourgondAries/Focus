@@ -43,8 +43,7 @@ public class DatePickingActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void returnResult(View view)
-    {
+    public void returnResult(View view) {
 
         int day = date_picker.getDayOfMonth();
         int month = date_picker.getMonth();
