@@ -13,10 +13,12 @@ import java.util.Calendar;
 
 public class DatePickingActivity extends ActionBarActivity {
 
+    private DatePicker date_picker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date_picking);
+        date_picker = (DatePicker) findViewById(R.id.datePicker);
     }
 
     @Override
@@ -43,7 +45,7 @@ public class DatePickingActivity extends ActionBarActivity {
 
     public void returnResult(View view)
     {
-        DatePicker date_picker = (DatePicker) findViewById(R.id.datePicker);
+
         int day = date_picker.getDayOfMonth();
         int month = date_picker.getMonth();
         int year = date_picker.getYear();

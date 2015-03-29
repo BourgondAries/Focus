@@ -24,8 +24,9 @@ import java.util.Calendar;
  */
 public class FullscreenActivity extends Activity {
 
-    Task task = new Task();
-    CountDownTimer countdown;
+    private Task task = new Task();
+    private CountDownTimer countdown;
+    private TextView full_screen;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -123,6 +124,7 @@ public class FullscreenActivity extends Activity {
         // while interacting with the UI.
         findViewById(R.id.new_button).setOnTouchListener(mDelayHideTouchListener);
 
+        full_screen = (TextView) findViewById(R.id.fullscreen_content);
     }
 
     @Override
@@ -185,8 +187,6 @@ public class FullscreenActivity extends Activity {
             countdown.cancel();
         countdown = new CountDownTimer(task.finish_time.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
         {
-            private TextView full_screen = (TextView) findViewById(R.id.fullscreen_content);
-
             public void onTick(long millis_until_finished)
             {
                 long secs = millis_until_finished / 1000;
@@ -224,7 +224,7 @@ public class FullscreenActivity extends Activity {
 
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
         String description = data.getStringExtra("Description");
-        ((TextView) findViewById(R.id.fullscreen_content)).setText(calendar.getTimeInMillis() + "\n" + description);
+        full_screen.setText(calendar.getTimeInMillis() + "\n" + description);
 
         if (true /*the event is closer than the current, store the current and load this event instead*/ )
         {
