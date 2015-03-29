@@ -248,8 +248,7 @@ public class FullscreenActivity extends Activity {
             return;
 
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
-        String description = data.getStringExtra("Description");
-        full_screen.setText(calendar.getTimeInMillis() + "\n" + description);
+        String description = data.getStringExtra("Description").replace("\n", " ");
 
         if (task.finish_time == null || calendar.before(task.finish_time) /*the event is closer than the current, store the current and load this event instead*/ )
         {
