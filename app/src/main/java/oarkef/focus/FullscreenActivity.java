@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -232,8 +233,9 @@ public class FullscreenActivity extends Activity {
 
         if (task.finish_time == null || calendar.before(task.finish_time) /*the event is closer than the current, store the current and load this event instead*/ )
         {
-            if (task.finish_time != null)
+            if (task.finish_time != null) {
                 task_storage.saveTask(getApplicationContext(), task.toString());
+            }
             task.finish_time = calendar;
             task.description = description;
             restartCounter();
