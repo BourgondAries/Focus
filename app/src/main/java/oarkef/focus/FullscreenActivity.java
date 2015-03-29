@@ -64,16 +64,6 @@ public class FullscreenActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        deleteFile("file1");
-        deleteFile("file2");
-        try {
-            openFileOutput("file1", Context.MODE_PRIVATE).close();
-            openFileOutput("file2", Context.MODE_PRIVATE).close();
-        } catch (FileNotFoundException exc) {
-            System.out.println("File not found");
-        } catch (IOException exc) {
-            System.out.println("IOExc not found");
-        }
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen);
@@ -141,6 +131,10 @@ public class FullscreenActivity extends Activity {
         findViewById(R.id.new_button).setOnTouchListener(mDelayHideTouchListener);
 
         full_screen = (TextView) findViewById(R.id.fullscreen_content);
+
+        if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == true) {
+            countdown.start();
+        }
     }
 
     @Override
