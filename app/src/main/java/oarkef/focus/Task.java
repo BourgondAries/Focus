@@ -3,7 +3,11 @@ package oarkef.focus;
 import android.content.Context;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import oarkef.focus.util.IO;
 
@@ -46,5 +50,27 @@ public class Task
         return finish_time;
     }
 
+    public String toString()
+    {
+        return finish_time.get(Calendar.YEAR)
+            + "-" + finish_time.get(Calendar.MONTH)
+            + "-" + finish_time.get(Calendar.DAY_OF_MONTH)
+            + " " + finish_time.get(Calendar.HOUR_OF_DAY)
+            + ":" + finish_time.get(Calendar.MINUTE)
+            + ":" + finish_time.get(Calendar.SECOND)
+            + ";" + description + "\n";
+    }
+
+    public void fromString(String input)
+    {
+        String[] parts = input.split(";");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            finish_time.setTime((Date) formatter.parse(parts[0]));
+        } catch (ParseException exc) {
+            System.out.println("parse exc");
+        }
+        description = parts[1];
+    }
 }
 
