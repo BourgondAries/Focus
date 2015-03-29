@@ -54,22 +54,25 @@ public class Task
     public String toString()
     {
         String str = finish_time.get(Calendar.YEAR)
-                +
-                "-" +
-                String.format(
-                        "%02d-%02d %02d:%02d:%02d",
-                        finish_time.get(Calendar.MONTH),
-                        finish_time.get(Calendar.DAY_OF_MONTH),
-                        finish_time.get(Calendar.HOUR_OF_DAY),
-                        finish_time.get(Calendar.MINUTE),
-                        finish_time.get(Calendar.SECOND)
-                ) + ";" + description + "\n";
-        Log.d("toString:" ,str);
+            +
+            "-" +
+            String.format(
+                    "%02d-%02d %02d:%02d:%02d",
+                    finish_time.get(Calendar.MONTH) + 1,
+                    finish_time.get(Calendar.DAY_OF_MONTH),
+                    finish_time.get(Calendar.HOUR_OF_DAY),
+                    finish_time.get(Calendar.MINUTE),
+                    finish_time.get(Calendar.SECOND)
+            ) + ";" + description + "\n";
         return str;
     }
 
-    public void fromString(String input)
+    public boolean fromString(String input)
     {
+        System.out.println("Attempting to fromString: " + input);
+        if (input.equals(""))
+            return false;
+
         String[] parts = input.split(";");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -78,6 +81,7 @@ public class Task
             System.out.println("parse exc");
         }
         description = parts[1];
+        return true;
     }
 }
 
