@@ -20,6 +20,8 @@ public class Task {
     public Calendar finish_time;
 
     public String toString() {
+        if (finish_time == null)
+            return "null;" + description + "\n";
         String str = finish_time.get(Calendar.YEAR)
             +
             "-" +
@@ -38,10 +40,12 @@ public class Task {
         if (input.equals(""))
             return false;
         String[] parts = input.split(";");
+        if (parts.length != 2)
+            throw new ParseException("Unable to correctly split according to ;", 0);
+        description = parts[1];
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         finish_time = Calendar.getInstance();
         finish_time.setTime((Date) formatter.parse(parts[0]));
-        description = parts[1];
         return true;
     }
 }

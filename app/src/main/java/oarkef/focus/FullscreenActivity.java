@@ -5,7 +5,9 @@ import oarkef.focus.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -138,9 +140,25 @@ public class FullscreenActivity extends Activity {
                 restartCounter();
             }
         } catch (IOException exc) {
-            task.description = "Unable to load from file. Check your settings.";
+            new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Unable to load from file. Check your settings.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         } catch (ParseException exc) {
-            task.description = "Could not parse the stored file. Reset it to blank.";
+            new AlertDialog.Builder(this)
+                .setTitle("Minor Hiccup")
+                .setMessage("Could not parse the stored file. It has been reset.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
             deleteFile(IO.getMainFileName());
             deleteFile(IO.getTemporaryFilename());
         }
@@ -195,19 +213,51 @@ public class FullscreenActivity extends Activity {
     }
 
     public void deleteEvent(View view) {
-        try {
-            task_storage.deleteSpecificEntry(getApplicationContext(), task.toString());
-            if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == false) {
-                countdown.cancel();
-                full_screen.setText("Focus");
-                task.finish_time = null;
-            } else {
-                restartCounter();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (task.finish_time == null) {
+            new AlertDialog.Builder(this)
+                .setTitle("Information")
+                .setMessage("You have no pending tasks.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
         }
-
+        else {
+            try {
+                task_storage.deleteSpecificEntry(getApplicationContext(), task.toString());
+                if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == false) {
+                    stopCounterIfItExists();
+                    full_screen.setText("Focus");
+                    task.finish_time = null;
+                } else {
+                    restartCounter();
+                }
+            } catch (IOException exc) {
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Unable to delete this task.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            } catch (ParseException exc) {
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Could not parse the stored file. It has been reset.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+                deleteFile(IO.getMainFileName());
+                deleteFile(IO.getTemporaryFilename());
+            }
+        }
     }
 
     private void stopCounterIfItExists() {
@@ -216,8 +266,7 @@ public class FullscreenActivity extends Activity {
     }
 
     private void restartCounter() {
-        if (countdown != null)
-            countdown.cancel();
+        stopCounterIfItExists();
         countdown = new CountDownTimer(task.finish_time.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000) {
             public void onTick(long millis_until_finished) {
                 long secs = millis_until_finished / 1000;
@@ -253,6 +302,8 @@ public class FullscreenActivity extends Activity {
 
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
         String description = data.getStringExtra("Description").replace("\n", " ").replace(";", ":");
+        if (description.equals(""))
+            description = "No description";
 
         if (task.finish_time == null || calendar.before(task.finish_time) /*the event is closer than the current, store the current and load this event instead*/ ) {
             if (task.finish_time != null) {
@@ -260,7 +311,15 @@ public class FullscreenActivity extends Activity {
                     task_storage.saveTask(getApplicationContext(), task.toString());
                 } catch (IOException exc) {
                     stopCounterIfItExists();
-                    task.description = "Unable to store to file. Check your settings.";
+                    new AlertDialog.Builder(this)
+                        .setTitle("Minor Hiccup")
+                        .setMessage("Could not store the task.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
                 }
             }
             task.finish_time = calendar;
@@ -269,7 +328,15 @@ public class FullscreenActivity extends Activity {
                 task_storage.saveTask(getApplicationContext(), task.toString());
             } catch (IOException exc) {
                 stopCounterIfItExists();
-                task.description = "Unable to store the new event to file. Check your settings.";
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Unable to store the new event to file. Check your settings.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             }
             restartCounter();
         }
@@ -281,7 +348,15 @@ public class FullscreenActivity extends Activity {
                 task_storage.saveTask(getApplicationContext(), temp_task.toString());
             } catch (IOException exc) {
                 stopCounterIfItExists();
-                task.description = "Unable to store the new event to file. Check your settings.";
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Unable to store the new event to file. Check your settings.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             }
         }
     }

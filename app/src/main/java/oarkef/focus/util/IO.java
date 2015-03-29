@@ -152,29 +152,17 @@ public class IO {
         return split_char;
     }
 
-    public String printFile(Context context, String file) {
+    public String readFile(Context context, String file) throws IOException {
 
         String result = "";
+        BufferedReader br = new BufferedReader(new InputStreamReader(context.openFileInput(file)));
 
-        try {
-            FileInputStream fis = context.openFileInput(file);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-
-            String one_line;
-            while ((one_line = br.readLine()) != null ) {
-                result = result + "\n" + one_line;
-            }
-
-            br.close();
-            isr.close();
-            fis.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        String one_line;
+        while ((one_line = br.readLine()) != null ) {
+            result = result + "\n" + one_line;
         }
+
+        br.close();
 
         return result;
     }

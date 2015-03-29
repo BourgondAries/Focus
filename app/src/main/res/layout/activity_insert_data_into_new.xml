@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:id="@+id/editText"
-        android:layout_weight="0.7"
+        android:layout_weight="0.9"
         android:hint="Enter the description"
         android:layout_gravity="center" />
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Save"
         android:id="@+id/button4"
-        android:layout_weight="0.3"
+        android:layout_weight="0.1"
         android:layout_gravity="center_horizontal"
         android:onClick="save" />
 
