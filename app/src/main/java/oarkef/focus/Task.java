@@ -29,7 +29,7 @@ public class Task
             String time_part = task.substring(0, index);
             finish_time.setTimeInMillis(Timestamp.valueOf(time_part).getTime());
 
-            description = task.substring(index + 2);
+            description = task.substring(index + 1);
 
             return true;
         }

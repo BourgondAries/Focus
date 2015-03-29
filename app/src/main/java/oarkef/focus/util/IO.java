@@ -138,7 +138,6 @@ public class IO
             br.close();
             isr.close();
             fis.close();
-            fis.close();
 
             changeCurrentFile();
 
