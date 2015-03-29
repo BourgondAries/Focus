@@ -31,10 +31,10 @@ public class IO
     {
         try
         {
+            Log.d("SaveToFile", task);
             FileOutputStream fos = context.openFileOutput(current_file, Context.MODE_APPEND);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
-            osw.write(task);
-            osw.flush();
+            osw.write(task + "\n");
             osw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,17 +58,14 @@ public class IO
             String oneLine;
             Log.d("TAG", "test");
             while ((oneLine = br.readLine()) != null ) {
-
+                Log.d("loadNext:" , oneLine);
                 index = oneLine.indexOf(split_char);
                 time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
-                System.out.println(time_part);
-
 
                 if (read_ts.before(closest)) {
                     closest = read_ts;
                     task = oneLine;
-
                 }
             }
             br.close();
@@ -81,6 +78,40 @@ public class IO
         }
 
         return task;
+    }
+    public void deleteSpecificEntry(Context context, String entry) {
+        try {
+            FileInputStream fis = context.openFileInput(current_file);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+
+            String oneLine;
+
+            while ((oneLine = br.readLine()) != null ) {
+
+                if (!oneLine.equals(entry)) {
+                    osw.write(oneLine + "\n");
+                }
+            }
+            osw.close();
+            fos.close();
+
+            br.close();
+            isr.close();
+            fis.close();
+
+            changeCurrentFile();
+            copyFromTempToMain(context);
+            changeCurrentFile();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteOldEntries(Context context)
@@ -102,43 +133,23 @@ public class IO
 
             while ((oneLine = br.readLine()) != null ) {
                 index = oneLine.indexOf(split_char);
+                Log.d("Read line:", oneLine);
                 time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
                 if (read_ts.after(curr_ts)) {
                     osw.write(oneLine + "\n");
                 }
             }
-            osw.flush();
             osw.close();
             fos.close();
 
             br.close();
             isr.close();
-            fis.close();
             fis.close();
 
             changeCurrentFile();
-
             //Copy file
-            fis = context.openFileInput(current_file);
-            isr = new InputStreamReader(fis);
-            br = new BufferedReader(isr);
-
-            fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
-            osw = new OutputStreamWriter(fos);
-
-            while ((oneLine = br.readLine()) != null ) {
-                osw.write(oneLine);
-            }
-
-            osw.flush();
-            osw.close();
-            fos.close();
-
-            br.close();
-            isr.close();
-            fis.close();
-
+            copyFromTempToMain(context);
             changeCurrentFile();
 
         }
@@ -149,7 +160,7 @@ public class IO
             e.printStackTrace();
         }
     }
-    public void changeCurrentFile() {
+    private void changeCurrentFile() {
 
         if (current_file == main) {
             current_file = temp;
@@ -158,6 +169,34 @@ public class IO
         else {
             current_file = main;
             other_file = temp;
+        }
+    }
+
+    private void copyFromTempToMain(Context context) {
+        try {
+            FileInputStream fis = context.openFileInput(current_file);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+
+            String oneLine;
+            while ((oneLine = br.readLine()) != null ) {
+                osw.write(oneLine + "\n");
+            }
+
+            osw.close();
+            fos.close();
+
+            br.close();
+            isr.close();
+            fis.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
