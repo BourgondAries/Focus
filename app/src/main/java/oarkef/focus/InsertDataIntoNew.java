@@ -13,7 +13,7 @@ import java.util.Calendar;
 
 public class InsertDataIntoNew extends ActionBarActivity {
 
-    java.util.Calendar calendar = Calendar.getInstance();
+    private java.util.Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,6 @@ public class InsertDataIntoNew extends ActionBarActivity {
         } else if (request_code == Request.DATE.ordinal()) {
             Calendar other_calendar = (java.util.Calendar) data.getSerializableExtra("Date");
             calendar.set(other_calendar.get(Calendar.YEAR), other_calendar.get(Calendar.MONTH), other_calendar.get(Calendar.DAY_OF_MONTH));
-
             Intent intent = new Intent(this, TimePickingActivity.class);
             startActivityForResult(intent, Request.TIME.ordinal());
         } else if (request_code == Request.TIME.ordinal()) {
