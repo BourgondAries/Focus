@@ -31,6 +31,7 @@ public class IO
     {
         try
         {
+            Log.d("SaveToFile", task);
             FileOutputStream fos = context.openFileOutput(current_file, Context.MODE_APPEND);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
             osw.write(task + "\n");
@@ -61,7 +62,6 @@ public class IO
                 index = oneLine.indexOf(split_char);
                 time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
-                System.out.println(time_part);
 
                 if (read_ts.before(closest)) {
                     closest = read_ts;
@@ -133,6 +133,7 @@ public class IO
 
             while ((oneLine = br.readLine()) != null ) {
                 index = oneLine.indexOf(split_char);
+                Log.d("Read line:", oneLine);
                 time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
                 if (read_ts.after(curr_ts)) {

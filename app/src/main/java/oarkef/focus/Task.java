@@ -1,6 +1,7 @@
 package oarkef.focus;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -52,16 +53,19 @@ public class Task
 
     public String toString()
     {
-        return finish_time.get(Calendar.YEAR)
+        String str = finish_time.get(Calendar.YEAR)
                 +
-            String.format(
-                "%02d-%02d %02d:%02d:%02d",
-                finish_time.get(Calendar.MONTH),
-                finish_time.get(Calendar.DAY_OF_MONTH),
-                finish_time.get(Calendar.HOUR_OF_DAY),
-                finish_time.get(Calendar.MINUTE),
-                finish_time.get(Calendar.SECOND)
-            ) + ";" + description + "\n";
+                "-" +
+                String.format(
+                        "%02d-%02d %02d:%02d:%02d",
+                        finish_time.get(Calendar.MONTH),
+                        finish_time.get(Calendar.DAY_OF_MONTH),
+                        finish_time.get(Calendar.HOUR_OF_DAY),
+                        finish_time.get(Calendar.MINUTE),
+                        finish_time.get(Calendar.SECOND)
+                ) + ";" + description + "\n";
+        Log.d("toString:" ,str);
+        return str;
     }
 
     public void fromString(String input)
