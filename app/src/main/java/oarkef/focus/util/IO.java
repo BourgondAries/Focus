@@ -66,7 +66,7 @@ public class IO
             while ((oneLine = br.readLine()) != null ) {
                 System.out.println("Current line read: " + oneLine);
                 if (oneLine.equals(""))
-                    break;
+                    continue;
                 index = oneLine.indexOf(split_char);
                 time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
@@ -101,7 +101,7 @@ public class IO
             while ((oneLine = br.readLine()) != null ) {
                 System.out.print("deleteSpecific:" + entry + "|" + oneLine + ":");
                 entry = entry.trim();
-                if (!oneLine.equals(entry)) {
+                if (!oneLine.equals(entry) && !oneLine.equals("")) {
                     System.out.println("Actually copying");
                     osw.write(oneLine + "\n");
                 }
