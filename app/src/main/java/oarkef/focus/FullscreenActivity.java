@@ -189,8 +189,7 @@ public class FullscreenActivity extends Activity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    public void newEvent(View view)
-    {
+    public void newEvent(View view) {
         Intent intent = new Intent(this, InsertDataIntoNew.class);
         startActivityForResult(intent, 0);
     }
@@ -221,10 +220,8 @@ public class FullscreenActivity extends Activity {
     {
         if (countdown != null)
             countdown.cancel();
-        countdown = new CountDownTimer(task.finish_time.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000)
-        {
-            public void onTick(long millis_until_finished)
-            {
+        countdown = new CountDownTimer(task.finish_time.getTimeInMillis() - java.util.Calendar.getInstance().getTimeInMillis(), 1000) {
+            public void onTick(long millis_until_finished) {
                 long secs = millis_until_finished / 1000;
                 long seconds = secs % 60;
                 long mins = secs / 60;
@@ -233,8 +230,7 @@ public class FullscreenActivity extends Activity {
                 full_screen.setText(task.description + "\n\n" + hours + ":" + String.format("%02d:%02d\nRemaining", minutes, seconds));
             }
 
-            public void onFinish()
-            {
+            public void onFinish() {
                 full_screen.setText(
                     task.description
                     + "\n\n"
@@ -253,16 +249,14 @@ public class FullscreenActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int request_code, int result_code, Intent data)
-    {
+    protected void onActivityResult(int request_code, int result_code, Intent data) {
         if (result_code == RESULT_CANCELED)
             return;
 
         java.util.Calendar calendar = (java.util.Calendar) data.getSerializableExtra("Date");
         String description = data.getStringExtra("Description").replace("\n", " ");
 
-        if (task.finish_time == null || calendar.before(task.finish_time) /*the event is closer than the current, store the current and load this event instead*/ )
-        {
+        if (task.finish_time == null || calendar.before(task.finish_time) /*the event is closer than the current, store the current and load this event instead*/ ) {
             if (task.finish_time != null) {
                 try {
                     task_storage.saveTask(getApplicationContext(), task.toString());
@@ -281,8 +275,7 @@ public class FullscreenActivity extends Activity {
             }
             restartCounter();
         }
-        else /*Store the event in the database(just a simple file)*/
-        {
+        else /*Store the event in the database(just a simple file)*/ {
             Task temp_task = new Task();
             temp_task.finish_time = calendar;
             temp_task.description = description;
