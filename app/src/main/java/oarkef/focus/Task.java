@@ -24,12 +24,12 @@ public class Task {
             +
             "-" +
             String.format(
-                    "%02d-%02d %02d:%02d:%02d",
-                    finish_time.get(Calendar.MONTH) + 1,
-                    finish_time.get(Calendar.DAY_OF_MONTH),
-                    finish_time.get(Calendar.HOUR_OF_DAY),
-                    finish_time.get(Calendar.MINUTE),
-                    finish_time.get(Calendar.SECOND)
+                "%02d-%02d %02d:%02d:%02d",
+                finish_time.get(Calendar.MONTH) + 1,
+                finish_time.get(Calendar.DAY_OF_MONTH),
+                finish_time.get(Calendar.HOUR_OF_DAY),
+                finish_time.get(Calendar.MINUTE),
+                finish_time.get(Calendar.SECOND)
             ) + ";" + description + "\n";
         return str;
     }
