@@ -197,10 +197,12 @@ public class FullscreenActivity extends Activity {
         try {
             task_storage.deleteSpecificEntry(getApplicationContext(), task.toString());
             if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == false) {
+                System.out.println("Why does this happen?");
                 countdown.cancel();
                 full_screen.setText("Focus");
                 task.finish_time = null;
             } else {
+                System.out.println("Just restarted the counter.");
                 restartCounter();
             }
         } catch (Exception e) {
