@@ -62,18 +62,18 @@ public class IO
             FileInputStream fis = context.openFileInput(current_file);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
-            String oneLine;
-            while ((oneLine = br.readLine()) != null ) {
-                System.out.println("Current line read: " + oneLine);
-                if (oneLine.equals(""))
+            String one_line;
+            while ((one_line = br.readLine()) != null ) {
+                System.out.println("Current line read: " + one_line);
+                if (one_line.equals(""))
                     continue;
-                index = oneLine.indexOf(split_char);
-                time_part = oneLine.substring(0, index);
+                index = one_line.indexOf(split_char);
+                time_part = one_line.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
 
                 if (read_ts.before(closest)) {
                     closest = read_ts;
-                    task = oneLine;
+                    task = one_line;
                 }
             }
             br.close();
@@ -96,14 +96,14 @@ public class IO
             FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
 
-            String oneLine;
+            String one_line;
 
-            while ((oneLine = br.readLine()) != null ) {
-                System.out.print("deleteSpecific:" + entry + "|" + oneLine + ":");
+            while ((one_line = br.readLine()) != null ) {
+                System.out.print("deleteSpecific:" + entry + "|" + one_line + ":");
                 entry = entry.trim();
-                if (!oneLine.equals(entry) && !oneLine.equals("")) {
+                if (!one_line.equals(entry) && !one_line.equals("")) {
                     System.out.println("Actually copying");
-                    osw.write(oneLine + "\n");
+                    osw.write(one_line + "\n");
                 }
             }
             osw.close();
@@ -139,14 +139,14 @@ public class IO
             FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
 
-            String oneLine;
+            String one_line;
 
-            while ((oneLine = br.readLine()) != null ) {
-                index = oneLine.indexOf(split_char);
-                time_part = oneLine.substring(0, index);
+            while ((one_line = br.readLine()) != null ) {
+                index = one_line.indexOf(split_char);
+                time_part = one_line.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
                 if (read_ts.after(curr_ts)) {
-                    osw.write(oneLine + "\n");
+                    osw.write(one_line + "\n");
                 }
             }
             osw.close();
@@ -190,9 +190,9 @@ public class IO
             FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
 
-            String oneLine;
-            while ((oneLine = br.readLine()) != null ) {
-                osw.write(oneLine + "\n");
+            String one_line;
+            while ((one_line = br.readLine()) != null ) {
+                osw.write(one_line + "\n");
             }
 
             osw.close();
@@ -222,9 +222,9 @@ public class IO
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
 
-            String oneLine;
-            while ((oneLine = br.readLine()) != null ) {
-                result = result + "\n" + oneLine;
+            String one_line;
+            while ((one_line = br.readLine()) != null ) {
+                result = result + "\n" + one_line;
             }
 
             br.close();
