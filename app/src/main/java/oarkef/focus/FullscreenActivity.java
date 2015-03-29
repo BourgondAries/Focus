@@ -12,11 +12,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 
 /**
@@ -65,6 +66,14 @@ public class FullscreenActivity extends Activity {
 
         deleteFile("file1");
         deleteFile("file2");
+        try {
+            openFileOutput("file1", Context.MODE_PRIVATE).close();
+            openFileOutput("file2", Context.MODE_PRIVATE).close();
+        } catch (FileNotFoundException exc) {
+            System.out.println("File not found");
+        } catch (IOException exc) {
+            System.out.println("IOExc not found");
+        }
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen);
@@ -186,11 +195,14 @@ public class FullscreenActivity extends Activity {
     public void deleteEvent(View view)
     {
         try {
-            Log.d("TAG", "inDeleteEvent");
             task_storage.deleteSpecificEntry(getApplicationContext(), task.toString());
-            task_storage.deleteOldEntries(getApplicationContext());
-            task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext()));
-            restartCounter();
+            if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == false) {
+                countdown.cancel();
+                full_screen.setText("Focus");
+                task.finish_time = null;
+            } else {
+                restartCounter();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -222,10 +234,10 @@ public class FullscreenActivity extends Activity {
                     + "/" + task.finish_time.get(Calendar.MONTH)
                     + "/" + task.finish_time.get(Calendar.DAY_OF_MONTH)
                     + String.format(
-                            "\n%02d:%02d:%02d\nOverdue",
-                            task.finish_time.get(Calendar.HOUR_OF_DAY),
-                            task.finish_time.get(Calendar.MINUTE),
-                            task.finish_time.get(Calendar.SECOND)
+                        "\n%02d:%02d:%02d\nOverdue",
+                        task.finish_time.get(Calendar.HOUR_OF_DAY),
+                        task.finish_time.get(Calendar.MINUTE),
+                        task.finish_time.get(Calendar.SECOND)
                     )
                 );
             }

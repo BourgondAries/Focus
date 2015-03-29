@@ -31,7 +31,6 @@ public class IO
     {
         try
         {
-            Log.d("SaveToFile", task);
             FileOutputStream fos = context.openFileOutput(current_file, Context.MODE_APPEND);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
             osw.write(task + "\n");
@@ -56,9 +55,10 @@ public class IO
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
             String oneLine;
-            Log.d("TAG", "test");
             while ((oneLine = br.readLine()) != null ) {
-                Log.d("loadNext:" , oneLine);
+                System.out.println("Current line read: " + oneLine);
+                if (oneLine.equals(""))
+                    break;
                 index = oneLine.indexOf(split_char);
                 time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
@@ -91,8 +91,10 @@ public class IO
             String oneLine;
 
             while ((oneLine = br.readLine()) != null ) {
-
+                System.out.print("deleteSpecific:" + entry + "|" + oneLine + ":");
+                entry = entry.trim();
                 if (!oneLine.equals(entry)) {
+                    System.out.println("Actually copying");
                     osw.write(oneLine + "\n");
                 }
             }
@@ -133,7 +135,6 @@ public class IO
 
             while ((oneLine = br.readLine()) != null ) {
                 index = oneLine.indexOf(split_char);
-                Log.d("Read line:", oneLine);
                 time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
                 if (read_ts.after(curr_ts)) {
