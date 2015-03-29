@@ -132,8 +132,9 @@ public class FullscreenActivity extends Activity {
 
         full_screen = (TextView) findViewById(R.id.fullscreen_content);
 
+        System.out.println("WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
         if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == true) {
-            countdown.start();
+            restartCounter();
         }
     }
 
@@ -257,6 +258,7 @@ public class FullscreenActivity extends Activity {
             }
             task.finish_time = calendar;
             task.description = description;
+            task_storage.saveTask(getApplicationContext(), task.toString());
             restartCounter();
         }
         else /*Store the event in the database(just a simple file)*/

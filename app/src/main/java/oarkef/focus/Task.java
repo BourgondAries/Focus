@@ -76,6 +76,7 @@ public class Task
         String[] parts = input.split(";");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
+            finish_time = Calendar.getInstance();
             finish_time.setTime((Date) formatter.parse(parts[0]));
         } catch (ParseException exc) {
             System.out.println("parse exc");
