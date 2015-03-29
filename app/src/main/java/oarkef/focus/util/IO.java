@@ -26,6 +26,18 @@ public class IO {
         return main;
     }
 
+    public void resetFiles(Context context) {
+        try {
+            FileOutputStream fos = context.openFileOutput(current_file, Context.MODE_PRIVATE);
+            FileOutputStream fos2 = context.openFileOutput(other_file, Context.MODE_PRIVATE);
+
+            fos.close();
+            fos2.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String getTemporaryFilename() {
         return temp;
     }
@@ -53,6 +65,7 @@ public class IO {
             if (closest == null || read_timestamp.before(closest)) {
                 closest = read_timestamp;
                 task = input_line;
+
             }
         }
         reader.close();
@@ -120,6 +133,7 @@ public class IO {
         }
     }
 
+
     private void copyFromTempToMain(Context context) throws IOException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(context.openFileInput(current_file)));
@@ -138,6 +152,32 @@ public class IO {
         return split_char;
     }
 
+    public String printFile(Context context, String file) {
+
+        String result = "";
+
+        try {
+            FileInputStream fis = context.openFileInput(file);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            String one_line;
+            while ((one_line = br.readLine()) != null ) {
+                result = result + "\n" + one_line;
+            }
+
+            br.close();
+            isr.close();
+            fis.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }
 
 
