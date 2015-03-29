@@ -57,17 +57,15 @@ public class IO
             String oneLine;
             Log.d("TAG", "test");
             while ((oneLine = br.readLine()) != null ) {
-
+                Log.d("loadNext:" , oneLine);
                 index = oneLine.indexOf(split_char);
                 time_part = oneLine.substring(0, index);
                 read_ts = Timestamp.valueOf(time_part);
                 System.out.println(time_part);
 
-
                 if (read_ts.before(closest)) {
                     closest = read_ts;
                     task = oneLine;
-
                 }
             }
             br.close();
@@ -106,26 +104,7 @@ public class IO
             fis.close();
 
             changeCurrentFile();
-
-            //Copy file
-            fis = context.openFileInput(current_file);
-            isr = new InputStreamReader(fis);
-            br = new BufferedReader(isr);
-
-            fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
-            osw = new OutputStreamWriter(fos);
-
-            while ((oneLine = br.readLine()) != null ) {
-                osw.write(oneLine + "\n");
-            }
-
-            osw.close();
-            fos.close();
-
-            br.close();
-            isr.close();
-            fis.close();
-
+            copyFromTempToMain(context);
             changeCurrentFile();
 
         } catch (IOException e) {
@@ -168,26 +147,8 @@ public class IO
             fis.close();
 
             changeCurrentFile();
-
             //Copy file
-            fis = context.openFileInput(current_file);
-            isr = new InputStreamReader(fis);
-            br = new BufferedReader(isr);
-
-            fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
-            osw = new OutputStreamWriter(fos);
-
-            while ((oneLine = br.readLine()) != null ) {
-                osw.write(oneLine + "\n");
-            }
-
-            osw.close();
-            fos.close();
-
-            br.close();
-            isr.close();
-            fis.close();
-
+            copyFromTempToMain(context);
             changeCurrentFile();
 
         }
@@ -210,8 +171,32 @@ public class IO
         }
     }
 
-    private void copyFromTempToMain() {
-        
+    private void copyFromTempToMain(Context context) {
+        try {
+            FileInputStream fis = context.openFileInput(current_file);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+
+            String oneLine;
+            while ((oneLine = br.readLine()) != null ) {
+                osw.write(oneLine + "\n");
+            }
+
+            osw.close();
+            fos.close();
+
+            br.close();
+            isr.close();
+            fis.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public char getSplitChar(){

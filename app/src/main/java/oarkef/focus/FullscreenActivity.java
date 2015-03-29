@@ -5,12 +5,14 @@ import oarkef.focus.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -60,6 +62,9 @@ public class FullscreenActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        deleteFile("file1");
+        deleteFile("file2");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen);
@@ -180,9 +185,16 @@ public class FullscreenActivity extends Activity {
 
     public void deleteEvent(View view)
     {
-        task_storage.deleteOldEntries(getApplicationContext());
-        task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext()));
-        restartCounter();
+        try {
+            Log.d("TAG", "inDeleteEvent");
+            task_storage.deleteSpecificEntry(getApplicationContext(), task.toString());
+            task_storage.deleteOldEntries(getApplicationContext());
+            task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext()));
+            restartCounter();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void restartCounter()
