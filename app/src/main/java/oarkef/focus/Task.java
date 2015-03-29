@@ -15,44 +15,11 @@ import oarkef.focus.util.IO;
 /**
  * Created by Bourgond Aries on 3/28/2015.
  */
-public class Task
-{
+public class Task {
     public String description;
     public Calendar finish_time;
 
-    IO io = new IO();
-
-    public boolean loadEarliestEvent(Context context)
-    {
-        String task =  io.loadNextDeadlineFromFile(context);
-
-        if (task.equalsIgnoreCase("")) {
-            return false;
-        } else {
-            int index = task.indexOf(io.getSplitChar());
-
-            String time_part = task.substring(0, index);
-            finish_time.setTimeInMillis(Timestamp.valueOf(time_part).getTime());
-
-            description = task.substring(index + 1);
-
-            return true;
-        }
-
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public Calendar getFinishTime()
-    {
-        return finish_time;
-    }
-
-    public String toString()
-    {
+    public String toString() {
         String str = finish_time.get(Calendar.YEAR)
             +
             "-" +
@@ -67,20 +34,13 @@ public class Task
         return str;
     }
 
-    public boolean fromString(String input)
-    {
-        System.out.println("Attempting to fromString: " + input);
+    public boolean fromString(String input) throws ParseException {
         if (input.equals(""))
             return false;
-
         String[] parts = input.split(";");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            finish_time = Calendar.getInstance();
-            finish_time.setTime((Date) formatter.parse(parts[0]));
-        } catch (ParseException exc) {
-            System.out.println("parse exc");
-        }
+        finish_time = Calendar.getInstance();
+        finish_time.setTime((Date) formatter.parse(parts[0]));
         description = parts[1];
         return true;
     }

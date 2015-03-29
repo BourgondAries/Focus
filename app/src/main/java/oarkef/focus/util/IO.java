@@ -17,150 +17,98 @@ import java.sql.Timestamp;
 public class IO
 {
 
-    private String main = "file1";
-    private String temp = "file2";
-    private String  current_file = main;
+    private static String main = "file1";
+    private static String temp = "file2";
+    private String current_file = main;
     private String other_file = temp;
     private final char split_char = ';' ;
 
-    public void resetFiles() {
-        //TO DO
+    public static String getMainFileName() {
+        return main;
     }
 
-    public void saveTask(Context context, String task)
-    {
-        try
-        {
-            FileOutputStream fos = context.openFileOutput(current_file, Context.MODE_APPEND);
-            OutputStreamWriter osw = new OutputStreamWriter(fos);
-            osw.write(task + "\n");
-            osw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static String getTemporaryFilename() {
+        return temp;
     }
 
-    public String loadNextDeadlineFromFile(Context context)
-    {
+    public void saveTask(Context context, String task) throws IOException {
+        OutputStreamWriter writer = new OutputStreamWriter(context.openFileOutput(current_file, Context.MODE_APPEND));
+        writer.write(task + "\n");
+        writer.close();
+    }
+
+    public String loadNextDeadlineFromFile(Context context) throws IOException {
+
         String task = "";
-        int index;
-        //Timestamp curr_ts = new Timestamp(System.currentTimeMillis());
-        Timestamp read_ts = null;
-        Timestamp closest = Timestamp.valueOf("2099-01-01 00:00:00");
-        String time_part;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(context.openFileInput(current_file)));
+        String input_line;
+        Timestamp read_timestamp = null;
+        Timestamp closest = null;
+        while ((input_line = reader.readLine()) != null ) {
+            if (input_line.equals(""))
+                continue;
+            int index = input_line.indexOf(split_char);
+            String time_part = input_line.substring(0, index);
+            read_timestamp = Timestamp.valueOf(time_part);
 
-        try
-        {
-            FileInputStream fis = context.openFileInput(current_file);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            String oneLine;
-            while ((oneLine = br.readLine()) != null ) {
-                System.out.println("Current line read: " + oneLine);
-                if (oneLine.equals(""))
-                    continue;
-                index = oneLine.indexOf(split_char);
-                time_part = oneLine.substring(0, index);
-                read_ts = Timestamp.valueOf(time_part);
-
-                if (read_ts.before(closest)) {
-                    closest = read_ts;
-                    task = oneLine;
-                }
+            if (closest == null || read_timestamp.before(closest)) {
+                closest = read_timestamp;
+                task = input_line;
             }
-            br.close();
-            isr.close();
-            fis.close();
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
+        reader.close();
         return task;
     }
-    public void deleteSpecificEntry(Context context, String entry) {
-        try {
-            FileInputStream fis = context.openFileInput(current_file);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
 
-            FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
-            OutputStreamWriter osw = new OutputStreamWriter(fos);
+    public void deleteSpecificEntry(Context context, String entry) throws IOException {
 
-            String oneLine;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(context.openFileInput(current_file)));
+        OutputStreamWriter output_stream = new OutputStreamWriter(context.openFileOutput(other_file, Context.MODE_PRIVATE));
 
-            while ((oneLine = br.readLine()) != null ) {
-                System.out.print("deleteSpecific:" + entry + "|" + oneLine + ":");
-                entry = entry.trim();
-                if (!oneLine.equals(entry) && !oneLine.equals("")) {
-                    System.out.println("Actually copying");
-                    osw.write(oneLine + "\n");
-                }
+        String input_line;
+
+        while ((input_line = reader.readLine()) != null ) {
+            entry = entry.trim();
+            if (!input_line.equals(entry) && !input_line.equals("")) {
+                output_stream.write(input_line + "\n");
             }
-            osw.close();
-            fos.close();
-
-            br.close();
-            isr.close();
-            fis.close();
-
-            changeCurrentFile();
-            copyFromTempToMain(context);
-            changeCurrentFile();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        output_stream.close();
+
+        reader.close();
+
+        changeCurrentFile();
+        copyFromTempToMain(context);
+        changeCurrentFile();
     }
 
-    public void deleteOldEntries(Context context)
-    {
-        Timestamp curr_ts = new Timestamp(System.currentTimeMillis());
-        Timestamp read_ts;
-        int index;
-        String time_part;
+    public void deleteOldEntries(Context context) throws IOException {
 
-        try {
-            FileInputStream fis = context.openFileInput(current_file);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
+        Timestamp current_timestamp = new Timestamp(System.currentTimeMillis());
+        Timestamp read_timestamp;
 
-            FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
-            OutputStreamWriter osw = new OutputStreamWriter(fos);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(context.openFileInput(current_file)));
+        OutputStreamWriter output_stream = new OutputStreamWriter(context.openFileOutput(other_file, Context.MODE_PRIVATE));
 
-            String oneLine;
+        String oneLine;
 
-            while ((oneLine = br.readLine()) != null ) {
-                index = oneLine.indexOf(split_char);
-                time_part = oneLine.substring(0, index);
-                read_ts = Timestamp.valueOf(time_part);
-                if (read_ts.after(curr_ts)) {
-                    osw.write(oneLine + "\n");
-                }
+        while ((oneLine = reader.readLine()) != null ) {
+            int index = oneLine.indexOf(split_char);
+            String time_part = oneLine.substring(0, index);
+            read_timestamp = Timestamp.valueOf(time_part);
+            if (read_timestamp.after(current_timestamp)) {
+                output_stream.write(oneLine + "\n");
             }
-            osw.close();
-            fos.close();
-
-            br.close();
-            isr.close();
-            fis.close();
-
-            changeCurrentFile();
-            //Copy file
-            copyFromTempToMain(context);
-            changeCurrentFile();
-
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        output_stream.close();
+
+        reader.close();
+
+        changeCurrentFile();
+        copyFromTempToMain(context);
+        changeCurrentFile();
     }
+
     private void changeCurrentFile() {
 
         if (current_file == main) {
@@ -173,35 +121,21 @@ public class IO
         }
     }
 
-    private void copyFromTempToMain(Context context) {
-        try {
-            FileInputStream fis = context.openFileInput(current_file);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
+    private void copyFromTempToMain(Context context) throws IOException {
 
-            FileOutputStream fos = context.openFileOutput(other_file, Context.MODE_PRIVATE);
-            OutputStreamWriter osw = new OutputStreamWriter(fos);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(context.openFileInput(current_file)));
+        OutputStreamWriter writer = new OutputStreamWriter(context.openFileOutput(other_file, Context.MODE_PRIVATE));
 
-            String oneLine;
-            while ((oneLine = br.readLine()) != null ) {
-                osw.write(oneLine + "\n");
-            }
-
-            osw.close();
-            fos.close();
-
-            br.close();
-            isr.close();
-            fis.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        String input_line;
+        while ((input_line = reader.readLine()) != null ) {
+            writer.write(input_line + "\n");
         }
+
+        writer.close();
+        reader.close();
     }
 
-    public char getSplitChar(){
+    public char getSplitChar() {
         return split_char;
     }
 

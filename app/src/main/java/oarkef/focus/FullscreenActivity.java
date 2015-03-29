@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
 
 /**
@@ -132,9 +133,16 @@ public class FullscreenActivity extends Activity {
 
         full_screen = (TextView) findViewById(R.id.fullscreen_content);
 
-        System.out.println("WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-        if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == true) {
-            restartCounter();
+        try {
+            if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == true) {
+                restartCounter();
+            }
+        } catch (IOException exc) {
+            task.description = "Unable to load from file. Check your settings.";
+        } catch (ParseException exc) {
+            task.description = "Could not parse the stored file. Reset it to blank.";
+            deleteFile(IO.getMainFileName());
+            deleteFile(IO.getTemporaryFilename());
         }
     }
 
@@ -192,18 +200,21 @@ public class FullscreenActivity extends Activity {
         try {
             task_storage.deleteSpecificEntry(getApplicationContext(), task.toString());
             if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == false) {
-                System.out.println("Why does this happen?");
                 countdown.cancel();
                 full_screen.setText("Focus");
                 task.finish_time = null;
             } else {
-                System.out.println("Just restarted the counter.");
                 restartCounter();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void stopCounterIfItExists() {
+        if (countdown != null)
+            countdown.cancel();
     }
 
     private void restartCounter()
@@ -228,7 +239,7 @@ public class FullscreenActivity extends Activity {
                     task.description
                     + "\n\n"
                     + task.finish_time.get(Calendar.YEAR)
-                    + "/" + task.finish_time.get(Calendar.MONTH)
+                    + "/" + task.finish_time.get(Calendar.MONTH) + 1
                     + "/" + task.finish_time.get(Calendar.DAY_OF_MONTH)
                     + String.format(
                         "\n%02d:%02d:%02d\nOverdue",
@@ -253,11 +264,21 @@ public class FullscreenActivity extends Activity {
         if (task.finish_time == null || calendar.before(task.finish_time) /*the event is closer than the current, store the current and load this event instead*/ )
         {
             if (task.finish_time != null) {
-                task_storage.saveTask(getApplicationContext(), task.toString());
+                try {
+                    task_storage.saveTask(getApplicationContext(), task.toString());
+                } catch (IOException exc) {
+                    stopCounterIfItExists();
+                    task.description = "Unable to store to file. Check your settings.";
+                }
             }
             task.finish_time = calendar;
             task.description = description;
-            task_storage.saveTask(getApplicationContext(), task.toString());
+            try {
+                task_storage.saveTask(getApplicationContext(), task.toString());
+            } catch (IOException exc) {
+                stopCounterIfItExists();
+                task.description = "Unable to store the new event to file. Check your settings.";
+            }
             restartCounter();
         }
         else /*Store the event in the database(just a simple file)*/
@@ -265,7 +286,12 @@ public class FullscreenActivity extends Activity {
             Task temp_task = new Task();
             temp_task.finish_time = calendar;
             temp_task.description = description;
-            task_storage.saveTask(getApplicationContext(), temp_task.toString());
+            try {
+                task_storage.saveTask(getApplicationContext(), temp_task.toString());
+            } catch (IOException exc) {
+                stopCounterIfItExists();
+                task.description = "Unable to store the new event to file. Check your settings.";
+            }
         }
     }
 }
