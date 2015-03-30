@@ -31,7 +31,7 @@ import java.util.Calendar;
  */
 public class FullscreenActivity extends Activity {
 
-    private Task task = new Task();
+    private Task task = null;
     private CountDownTimer countdown;
     private TextView full_screen;
     private IO task_storage = new IO();
@@ -133,6 +133,64 @@ public class FullscreenActivity extends Activity {
         // while interacting with the UI.
         findViewById(R.id.new_button).setOnTouchListener(mDelayHideTouchListener);
 
+
+        try {
+            task = new Task(-1);
+            IO.getId(getApplicationContext());
+        } catch (FileNotFoundException exc) {
+            new AlertDialog.Builder(this)
+                .setTitle("Minor Hiccup")
+                .setMessage("Unable to find the id file.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+        } catch (IOException exc) {
+            new AlertDialog.Builder(this)
+                .setTitle("Minor Hiccup")
+                .setMessage("Unable to parse the id file.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+        } catch (NumberFormatException exc) {
+            try {
+                getApplicationContext().openFileOutput(IO.getIdStoreName(), Context.MODE_PRIVATE).close();
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("The key was corrupted and has been reset.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            } catch (FileNotFoundException exc2) {
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Unable to find the keyfile.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            } catch (IOException exc2) {
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Unable to load from keyfile. Check your settings.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            }
+        }
         full_screen = (TextView) findViewById(R.id.fullscreen_content);
 
         try {
@@ -141,14 +199,14 @@ public class FullscreenActivity extends Activity {
             }
         } catch (IOException exc) {
             new AlertDialog.Builder(this)
-                    .setTitle("Minor Hiccup")
-                    .setMessage("Unable to load from file. Check your settings.")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+                .setTitle("Minor Hiccup")
+                .setMessage("Unable to load from file. Check your settings.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
         } catch (ParseException exc) {
             new AlertDialog.Builder(this)
                 .setTitle("Minor Hiccup")
@@ -226,7 +284,7 @@ public class FullscreenActivity extends Activity {
         }
         else {
             try {
-                task_storage.deleteSpecificEntry(getApplicationContext(), task.toString());
+                task_storage.deleteSpecificEntry(getApplicationContext(), task.getId());
                 if (task.fromString(task_storage.loadNextDeadlineFromFile(getApplicationContext())) == false) {
                     stopCounterIfItExists();
                     full_screen.setText("Focus");
@@ -341,7 +399,30 @@ public class FullscreenActivity extends Activity {
             restartCounter();
         }
         else /*Store the event in the database(just a simple file)*/ {
-            Task temp_task = new Task();
+            Task temp_task = null;
+            try {
+                temp_task = new Task(IO.incrementId(getApplicationContext()));
+            } catch (FileNotFoundException exc) {
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Unable to find the id file.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            } catch (IOException exc) {
+                new AlertDialog.Builder(this)
+                    .setTitle("Minor Hiccup")
+                    .setMessage("Unable to parse the id file.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            }
             temp_task.finish_time = calendar;
             temp_task.description = description;
             try {

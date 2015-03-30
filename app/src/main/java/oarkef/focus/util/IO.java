@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,12 +19,46 @@ public class IO {
 
     private static String main = "file1";
     private static String temp = "file2";
+    private static String id_store = "id_file";
+    private static int id = 0;
     private String current_file = main;
     private String other_file = temp;
     private final char split_char = ';' ;
 
     public static String getMainFileName() {
         return main;
+    }
+
+    public static String getIdStoreName() {
+        return id_store;
+    }
+
+    public static int getId(Context context) throws FileNotFoundException, IOException {
+        FileInputStream file = null;
+        try {
+            file = context.openFileInput(id_store);
+        } catch (FileNotFoundException exc) {
+            context.openFileOutput(id_store, Context.MODE_PRIVATE).close();
+        }
+        byte[] number_buffer = new byte[11]; // An int's largest encoding for 32 bit is 11 (including minus sign)
+        int read = file.read(number_buffer);
+        file.close();
+        if (read == 0) {
+            return 0;
+        } else {
+            id = Integer.parseInt(new String(number_buffer, "UTF-8"));
+            System.out.println("Reading id:" + id);
+            return id;
+        }
+    }
+
+    public static int incrementId(Context context) throws FileNotFoundException, IOException {
+        FileOutputStream output = context.openFileOutput(id_store, Context.MODE_PRIVATE);
+        ++id;
+        System.out.println("Writing id:" + id);
+        output.write(String.format("%011d", id).getBytes());
+        output.close();
+        return id;
     }
 
     public void resetFiles(Context context) {
@@ -58,21 +93,20 @@ public class IO {
         while ((input_line = reader.readLine()) != null ) {
             if (input_line.equals(""))
                 continue;
-            int index = input_line.indexOf(split_char);
-            String time_part = input_line.substring(0, index);
+            String[] decoded = input_line.split("" + split_char);
+            String time_part = decoded[1];
             read_timestamp = Timestamp.valueOf(time_part);
 
             if (closest == null || read_timestamp.before(closest)) {
                 closest = read_timestamp;
                 task = input_line;
-
             }
         }
         reader.close();
         return task;
     }
 
-    public void deleteSpecificEntry(Context context, String entry) throws IOException {
+    public void deleteSpecificEntry(Context context, int local_id) throws IOException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(context.openFileInput(current_file)));
         OutputStreamWriter output_stream = new OutputStreamWriter(context.openFileOutput(other_file, Context.MODE_PRIVATE));
@@ -80,8 +114,8 @@ public class IO {
         String input_line;
 
         while ((input_line = reader.readLine()) != null ) {
-            entry = entry.trim();
-            if (!input_line.equals(entry) && !input_line.equals("")) {
+            if (!input_line.equals("") && Integer.valueOf(input_line.split("" + split_char)[0]) != local_id) {
+                System.out.println(input_line.split("" + split_char)[0] + "--" + input_line + "--" + local_id + "--" + Integer.valueOf(input_line.split("" + split_char)[0]) );
                 output_stream.write(input_line + "\n");
             }
         }

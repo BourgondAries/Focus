@@ -16,22 +16,32 @@ import oarkef.focus.util.IO;
  * Created by Bourgond Aries on 3/28/2015.
  */
 public class Task {
+    private int task_id;
     public String description;
     public Calendar finish_time;
 
+    public Task(int id) {
+        task_id = id;
+    }
+
+    public int getId() {
+        return task_id;
+    }
+
     public String toString() {
         if (finish_time == null)
-            return "null;" + description + "\n";
-        String str = finish_time.get(Calendar.YEAR)
+            return task_id + ";null;" + description + "\n";
+        String str = task_id
+            + ";" + finish_time.get(Calendar.YEAR)
             +
             "-" +
             String.format(
-                "%02d-%02d %02d:%02d:%02d",
-                finish_time.get(Calendar.MONTH) + 1,
-                finish_time.get(Calendar.DAY_OF_MONTH),
-                finish_time.get(Calendar.HOUR_OF_DAY),
-                finish_time.get(Calendar.MINUTE),
-                finish_time.get(Calendar.SECOND)
+                    "%02d-%02d %02d:%02d:%02d",
+                    finish_time.get(Calendar.MONTH) + 1,
+                    finish_time.get(Calendar.DAY_OF_MONTH),
+                    finish_time.get(Calendar.HOUR_OF_DAY),
+                    finish_time.get(Calendar.MINUTE),
+                    finish_time.get(Calendar.SECOND)
             ) + ";" + description + "\n";
         return str;
     }
@@ -40,12 +50,13 @@ public class Task {
         if (input.equals(""))
             return false;
         String[] parts = input.split(";");
-        if (parts.length != 2)
+        if (parts.length != 3)
             throw new ParseException("Unable to correctly split according to ;", 0);
-        description = parts[1];
+        description = parts[2];
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         finish_time = Calendar.getInstance();
-        finish_time.setTime((Date) formatter.parse(parts[0]));
+        finish_time.setTime((Date) formatter.parse(parts[1]));
+        task_id = Integer.valueOf(parts[0]);
         return true;
     }
 }
