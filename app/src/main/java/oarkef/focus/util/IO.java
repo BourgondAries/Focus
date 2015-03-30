@@ -46,16 +46,13 @@ public class IO {
         if (read == 0) {
             return 0;
         } else {
-            id = Integer.parseInt(new String(number_buffer, "UTF-8"));
-            System.out.println("Reading id:" + id);
-            return id;
+            return id = Integer.parseInt(new String(number_buffer, "UTF-8"));
         }
     }
 
     public static int incrementId(Context context) throws FileNotFoundException, IOException {
         FileOutputStream output = context.openFileOutput(id_store, Context.MODE_PRIVATE);
         ++id;
-        System.out.println("Writing id:" + id);
         output.write(String.format("%011d", id).getBytes());
         output.close();
         return id;
@@ -115,7 +112,6 @@ public class IO {
 
         while ((input_line = reader.readLine()) != null ) {
             if (!input_line.equals("") && Integer.valueOf(input_line.split("" + split_char)[0]) != local_id) {
-                System.out.println(input_line.split("" + split_char)[0] + "--" + input_line + "--" + local_id + "--" + Integer.valueOf(input_line.split("" + split_char)[0]) );
                 output_stream.write(input_line + "\n");
             }
         }
