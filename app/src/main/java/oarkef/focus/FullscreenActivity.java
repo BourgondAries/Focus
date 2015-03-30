@@ -367,6 +367,7 @@ public class FullscreenActivity extends Activity {
             if (task.finish_time != null) {
                 try {
                     task_storage.saveTask(getApplicationContext(), task.toString());
+                    task = new Task(IO.incrementId(getApplicationContext()));
                 } catch (IOException exc) {
                     stopCounterIfItExists();
                     new AlertDialog.Builder(this)
