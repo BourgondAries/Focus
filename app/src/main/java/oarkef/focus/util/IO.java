@@ -39,6 +39,7 @@ public class IO {
             file = context.openFileInput(id_store);
         } catch (FileNotFoundException exc) {
             context.openFileOutput(id_store, Context.MODE_PRIVATE).close();
+            file = context.openFileInput(id_store);
         }
         byte[] number_buffer = new byte[11]; // An int's largest encoding for 32 bit is 11 (including minus sign)
         int read = file.read(number_buffer);
