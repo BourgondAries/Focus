@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -38,7 +39,7 @@ public class IO {
         try {
             file = context.openFileInput(id_store);
         } catch (FileNotFoundException exc) {
-            context.openFileOutput(id_store, Context.MODE_PRIVATE).close();
+            new File(context.getFilesDir(), id_store);
             file = context.openFileInput(id_store);
         }
         byte[] number_buffer = new byte[11]; // An int's largest encoding for 32 bit is 11 (including minus sign)
