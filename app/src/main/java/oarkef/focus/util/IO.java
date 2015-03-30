@@ -38,6 +38,10 @@ public class IO {
         FileInputStream file = null;
         try {
             file = context.openFileInput(id_store);
+            if (file == null) {
+                new File(context.getFilesDir(), id_store);
+                file = context.openFileInput(id_store);
+            }
         } catch (FileNotFoundException exc) {
             new File(context.getFilesDir(), id_store);
             file = context.openFileInput(id_store);
