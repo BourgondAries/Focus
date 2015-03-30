@@ -53,6 +53,8 @@ public class IO {
     public static int incrementId(Context context) throws FileNotFoundException, IOException {
         FileOutputStream output = context.openFileOutput(id_store, Context.MODE_PRIVATE);
         ++id;
+        if (id == Integer.MAX_VALUE)
+            id = 0;
         output.write(String.format("%011d", id).getBytes());
         output.close();
         return id;
